@@ -1,34 +1,87 @@
-# Realtime_Assembly_Guide
-Realtime_Assembly_Guide
+# Training Module
 
-각 소스의 원본 파일만 보존하고 코드 진행 후 나온 실행 파일은 업로드X
+YOLO 기반 부품 검출 및 조립 단계 분류 모델을 학습하기 위한 스크립트와 데이터 준비 과정을 관리하는 폴더입니다.
 
-📁 부품 정리 가이드
-├── 📂 dataset_detect_parts # 학습할 데이터셋 (부품만)
-│   ├── 📂 images_all       # 부품 이미지
-│   │   ├── ...
-│   ├── 📂 labels_all       # 라벨 txt
-│   │   ├── ...
-│   ├── 📂 _prepared        # 코드로 생성
-│   │   ├── data.yaml
-│   │   ├── ...             # 폴더 (images & labels)
-├── 📂 runs_detect          # 부품 학습
-│   ├── 📂 total_detect     # 1차 학습
-│   │   ├── 📂 weights
-│   │   │   ├── best.pt      # 단일 부품
-│   │   ├── ...
-│   ├── 📂 total_detect2     # 2차 학습
-│   │   ├── 📂 weights
-│   │   │   ├── best.pt      # 복합 부품
-│   │   ├── ...
-│
-├── 📂 dataset_ready        # 학습할 데이터_단계 (코드로 생성)
-│   ├── 📂 step1            # 학습 (단계)
-│   ├── ...
-├── 📂 runs_classify        # 학습 후 데이터 (분류)
-│   ├── 📂 foosball_steps   # 학습
-│   │   ├── 📂 weights
-│   │   │   ├── best.pt
-│   │   ├── ...
-│
-├── 3t_project_UI.py
+## 프로젝트 설명
+
+`train/` 폴더는 전체 프로젝트에서 **데이터 준비, 모델 학습, 학습 결과 관리**를 담당합니다.  
+이 모듈은 크게 두 가지 모델을 다룹니다.
+
+- **Detect 모델**: 조립 대상 부품의 존재 여부와 위치를 인식
+- **Classify 모델**: 현재 조립 장면이 어느 단계인지 분류
+
+학습은 단순 데모 수준이 아니라 실제 조립 장면 대응력을 높이기 위해 단일 부품 이미지와 복합 조립 장면 데이터를 함께 고려하는 방향으로 진행됩니다.
+
+## 핵심 기능
+
+- 데이터셋 정리 및 전처리
+- Detect용 라벨링 데이터 관리
+- Classify용 단계별 데이터셋 구성
+- YOLO Detect 학습
+- YOLO Classify 학습
+- 학습 결과 저장 및 실험 비교
+- 모델 버전 관리
+
+## 기술 스택
+
+- Python
+- Ultralytics YOLO
+- PyTorch
+- OpenCV
+- LabelImg 또는 유사 라벨링 도구
+- YAML 기반 데이터셋 설정
+
+
+## 데이터셋 설계 개요
+
+Detect 데이터셋
+목적: 여러 부품이 동시에 존재하는 장면에서 각 부품을 검출
+라벨 형식: bounding box
+사용 예: 체크리스트, 부품 준비 상태 확인, 제품 식별
+
+Classify 데이터셋
+목적: 장면 전체를 현재 조립 단계로 분류
+라벨 형식: 폴더 기반 클래스 분류
+사용 예: 현재 단계 판단, 자동 가이드 전환
+
+
+## 데이터 구성 원칙
+
+단일 부품 이미지와 복합 조립 장면을 함께 고려
+다양한 배경, 조명, 가림, 부품 겹침 상황 반영
+
+빈 작업대(Default) 클래스 포함
+미완성 상태와 완성 상태를 구분하여 학습
+
+실제 사용 환경과 유사한 프레임 확보
+
+
+## 대표 데이터셋 정보
+
+Foosball 기준:
+부품 종류: 14종
+총 부품 수: 30개
+사용자 안내용 표준 단계: 8단계
+학습용 확장 단계: 17단계
+
+전체 이미지 수: 2,921장
+전체 라벨 수: 7,175개
+
+
+## 폴더 구조
+
+```bash
+train/
+├─ README.md
+├─ prepare_dataset.py
+├─ train_yolo_all.py
+├─ train_yolo_cls.py
+├─ dataset_detect_parts
+│  ├─ images_all/
+│  ├─ labels_all/
+├─ source
+│  ├─ step0/
+│  ├─ step1/
+│  └─ step1_error/
+│  └─ ...
+```
