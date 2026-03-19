@@ -1,0 +1,26 @@
+path: C:/Users/kccistc/Desktop/workspace/project/dataset_detect_parts/_prepared
+train: images/train
+val: images/val
+
+names:
+  0: base_case
+  1: fan_case
+  2: board
+  3: upper_casecar
+  4: height_plate
+  5: spring_plate
+  6: base_plate
+  7: field1
+  8: field2
+  9: field3
+  10: field4
+  11: goal_net_back
+  12: goal_net_side
+  13: goalside 1
+  14: goalside 2
+  15: lateral1
+  16: lateral2
+  17: player2_rod
+  18: player3_rod
+  19: rod_cover
+  20: knobb
